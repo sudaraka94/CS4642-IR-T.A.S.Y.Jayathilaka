@@ -10,7 +10,9 @@ class RestaurantSpider(scrapy.Spider):
     def parse(self, response):
         for restaurant in response.css('a.front-group-item'):
             yield {
-                'name': restaurant.xpath('div/h3/text()').extract_first(),
+                'name': restaurant.xpath('div/h3/text()').extract_first().strip(),
+                'address': restaurant.xpath('.//*[@class="text-muted"]/text()').extract_first(),
+                'description': restaurant.xpath('div/p/text()').extract_first().strip()
             }
 
         next_page = response.css('a[rel="next"]::attr(href)').extract_first()
